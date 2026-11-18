@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@theme {
+  --color-midnight: #121725;
+  --color-midnight-soft: #1c2438;
+  --color-teal: #25cab7;
+  --color-teal-deep: #0b6e64;
+  --color-pale: #eff6f5;
+  --color-card: #ffffff;
+  --color-muted: #2c3548;
+  --color-line: #d5e2e0;
+  --color-clay: #7a3b32;
+  --color-clay-bg: #f8ecea;
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --radius-card: 1.4rem;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-pale);
+  color: var(--color-midnight);
+}
+
+::selection {
+  background: #25cab7;
+  color: #121725;
+}
+
+:focus-visible {
+  outline: 3px solid #121725;
+  outline-offset: 3px;
+}
+
+header :focus-visible {
+  outline-color: #eff6f5;
+}
+
+#main {
+  scroll-margin-top: 5.5rem;
+}
+
+.halo-mark {
+  display: inline-flex;
+  width: 1.6rem;
+  height: 1.6rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.halo-mark span {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+  border: 2.5px solid #25cab7;
+  box-shadow: 0 0 0 4px rgba(37, 202, 183, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

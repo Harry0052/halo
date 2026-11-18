@@ -2,7 +2,25 @@
 
 Product name: **Halo**. The build brief used the working codename PROOF. That codename is not used in the app, the package, or the interface.
 
-Current stage: **0 — plan accepted by the owner for this run.** Stages 1–6 are pre-approved. This file is updated at the end of each stage. The app is not claimed to be compliant or ready for a public launch.
+Current stage: **1 — foundation is on `main`.** Stages 2–6 are still to be built in this run. The app is not claimed to be compliant or ready for a public launch.
+
+## Stage 1 report
+
+```text
+PRODUCT: Halo
+STAGE: 1
+STATUS: PASS
+USER-FACING WORKING FLOWS: A visitor can save the name contacts should use. The name is stored in SQLite with a hashed session cookie and is still there after refresh. The header shows that name. A too-short name shows a field error and is not saved. Unknown addresses show a 404. The home screen explains what Halo will not do. There is no challenge button yet.
+UI/UX: Verify screen inspected at 390px and 1440px (docs/screenshots/01-verify-390.png and 01-verify-1440.png). Skip link is the first Tab stop. Field error is tied to the input. Toast announces a successful save. Status words are a labeled legend, not a result. No primary control is dead. Reduced motion is respected in CSS.
+DATA + SECURITY: users, sessions (token hash only), security_events, rate_buckets. Name saves are limited to 60 per hour per IP. Cross-origin posts are rejected. Security headers: nosniff, DENY framing, referrer policy. No challenge or invite rows yet.
+TESTS: npm run lint -> pass. npm run typecheck -> pass. npm test -> 8 files, 15 tests, pass. npm run build -> pass. CI=true npm run test:e2e -> 2 passed.
+REAL INTEGRATIONS: SQLite, session cookie | SANDBOX: none active yet | DISABLED: email, SMS, push, OAuth, phone lookup, payments, hosted Postgres. Passkeys and invites are not built.
+FILES CHANGED: app scaffold, design tokens, Verify screen, profile API, unit and Playwright tests, CI, README, screenshots.
+OPEN BUGS/RISKS: Same five risks as Stage 0. The legend still says the check flow is not on this screen; Stage 2 must not leave a control that pretends otherwise.
+NEXT STAGE PROPOSAL: Stage 2 — two people, an invite link, mutual acceptance, and a hard stop on challenges to someone who has not accepted.
+AWAITING APPROVAL: NO — the owner pre-approved every stage for this run.
+```
+
 
 ## Repository at inspection
 
