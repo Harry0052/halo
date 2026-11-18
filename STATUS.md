@@ -2,7 +2,25 @@
 
 Product name: **Halo**. The build brief used the working codename PROOF. That codename is not used in the app, the package, or the interface.
 
-Current stage: **1 — foundation is on `main`.** Stages 2–6 are still to be built in this run. The app is not claimed to be compliant or ready for a public launch.
+Current stage: **2 — trusted circle is on `main`.** Stages 3–6 are still to be built in this run. The app is not claimed to be compliant or ready for a public launch.
+
+## Stage 2 report
+
+```text
+PRODUCT: Halo
+STAGE: 2
+STATUS: PASS
+USER-FACING WORKING FLOWS: Two browsers can each save a name. One creates an invite link (copy, not email). The other opens it, saves a name, and accepts. Both then see Accepted. Until acceptance, canReceiveChallenge is false, including for the labeled sample pair. A bad, expired, revoked, or reused link all say "This invite link is not valid." The owner cannot accept their own link. Revoke works for the owner only.
+UI/UX: Circle and invite inspected at 390px and 1440px (docs/screenshots/02-circle-empty-390.png, 02-invite-390.png, 02-circle-accepted-1440.png). Verify screenshots refreshed. Bottom nav has Verify and Circle only. Local signing fallback is visible. Sample rows are badged Sample and "Not your contact."
+DATA + SECURITY: trust_invitations store a SHA-256 of the token, not the token. trust_edges are mutual and accepted only after confirm. Invite HMAC uses HALO_INVITE_SECRET or the documented local fallback. Rate limit 20 invites per hour per user and per IP. Revoke by another user returns not-found. No phone or email lookup route.
+TESTS: npm run lint -> pass. npm run typecheck -> pass. npm test -> 10 files, 19 tests, pass. npm run build -> pass. CI=true npm run test:e2e -> 3 passed.
+REAL INTEGRATIONS: SQLite, sessions, invite links | SANDBOX: local invite signing fallback, labeled on Circle | DISABLED: email, SMS, push, OAuth, phone lookup, payments. Passkey checks are not built.
+FILES CHANGED: trust migration, invite and accept services, Circle and invite screens, nav, tests, screenshots, README.
+OPEN BUGS/RISKS: A blocked edge cannot be reopened by an invite (guard is in place; the block button is Stage 5). Losing the link after the tab closes means creating another, because the server stores only a hash. Challenge creation is intentionally absent.
+NEXT STAGE PROPOSAL: Stage 3 — create an expiring, nonce-bound check for an accepted contact, show the code and QR, and refuse expired or already used checks.
+AWAITING APPROVAL: NO — the owner pre-approved every stage for this run.
+```
+
 
 ## Stage 1 report
 

@@ -11,10 +11,10 @@ test("a visitor can save a name and see it after refresh", async ({ page }) => {
   await expect(page.getByText("This legend is not a verification of a request.")).toBeVisible();
   await expect(page.getByText("Verified")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Save name" })).toBeVisible();
-  await page.screenshot({ path: "docs/screenshots/01-verify-390.png", fullPage: true });
+  await page.screenshot({ path: "docs/screenshots/01-verify-390.png" });
 
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.screenshot({ path: "docs/screenshots/01-verify-1440.png", fullPage: true });
+  await page.setViewportSize({ width: 1440, height: 1200 });
+  await page.screenshot({ path: "docs/screenshots/01-verify-1440.png" });
 
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();

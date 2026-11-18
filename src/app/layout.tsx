@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Newsreader, Outfit } from "next/font/google";
+import { shellNav } from "@/components/shell/nav";
+import { PrimaryNav } from "@/components/shell/primary-nav";
 import { SiteFooter } from "@/components/shell/site-footer";
 import { SiteHeader } from "@/components/shell/site-header";
 import { ToastProvider } from "@/components/ui/toast";
@@ -33,18 +35,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" className={`${outfit.variable} ${newsreader.variable} h-full`}>
-      <body className="flex min-h-full flex-col font-sans text-midnight antialiased">
+      <body className="flex min-h-full flex-col pb-24 font-sans text-midnight antialiased md:pb-0">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-pale focus:px-4 focus:py-2 focus:text-midnight"
         >
           Skip to content
         </a>
-        <SiteHeader displayName={user?.displayName ?? null} />
+        <SiteHeader displayName={user?.displayName ?? null} items={shellNav} />
         <ToastProvider>
           <div className="flex-1">{children}</div>
         </ToastProvider>
         <SiteFooter />
+        <PrimaryNav items={shellNav} variant="mobile" />
       </body>
     </html>
   );

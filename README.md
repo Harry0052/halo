@@ -32,6 +32,7 @@ npm run start
 - SQLite through `better-sqlite3` and Drizzle. This matches the owner’s sibling apps, Ripple and Tether, so Halo runs locally without a hosted database. PostgreSQL is not wired up.
 - Server routes under `src/app/api` call services in `src/lib`. Pages read those services directly.
 - Sessions are random tokens stored only as a SHA-256 hash. The cookie is `halo_session`, `httpOnly`, `SameSite=Lax`, and `Secure` only on HTTPS.
+- Invitation links are HMAC-signed. Only the hash is stored. A bad signature is rejected before any name is read.
 - Cache Components are off so one person’s checks are not placed in a shared cache.
 
 ```text
@@ -39,6 +40,7 @@ src/app            routes and pages
 src/components     shell and design-system pieces
 src/lib/db         schema, migrations, seed
 src/lib/auth       sessions and display names
+src/lib/trust      invite links and the trusted circle
 ```
 
 ## What is real, sandboxed, or disabled
@@ -49,7 +51,10 @@ This section matches the stage that is currently on `main`. Later stages extend 
 | --- | --- |
 | Save a name for this browser | Real. Session row in SQLite. |
 | Status words Pending, Confirmed, Could not verify | Real copy. The legend is not a verification result. |
-| Trusted circle, challenges, passkeys | Not built yet. |
+| Invite link, expiry, revoke, mutual accept | Real. Email delivery is disabled, so you copy the link. |
+| Sample circle | Real seed rows, labeled Sample. They cannot receive a check. |
+| Local invite signing fallback | Sandbox. Circle says when `HALO_INVITE_SECRET` is unset. |
+| Challenges and passkeys | Not built yet. |
 | Email, SMS, push, OAuth, phone lookup, payments | Disabled. Nothing is simulated. |
 | Hosted Postgres | Not in this repo. |
 
