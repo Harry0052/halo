@@ -1,7 +1,13 @@
+import fs from "node:fs";
 import { defineConfig, devices } from "@playwright/test";
 
 const port = 3000;
 const baseURL = `http://localhost:${port}`;
+const e2eDatabase = "data/halo-e2e.db";
+
+for (const suffix of ["", "-wal", "-shm"]) {
+  fs.rmSync(`${e2eDatabase}${suffix}`, { force: true });
+}
 
 export default defineConfig({
   testDir: "e2e",
@@ -29,7 +35,7 @@ export default defineConfig({
     timeout: 180_000,
     env: {
       ...process.env,
-      HALO_DB_PATH: process.env.HALO_DB_PATH ?? "data/halo.db",
+      HALO_DB_PATH: e2eDatabase,
     },
   },
 });

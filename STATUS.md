@@ -2,7 +2,25 @@
 
 Product name: **Halo**. The build brief used the working codename PROOF. That codename is not used in the app, the package, or the interface.
 
-Current stage: **5 — recovery and abuse controls are on `main`.** Stage 6 is still to be built in this run. The app is not claimed to be compliant or ready for a public launch.
+Current stage: **6 — local release candidate is on `main`.** The pilot has not been run. The app is not claimed to be compliant or ready for a public launch.
+
+## Stage 6 report
+
+```text
+PRODUCT: Halo
+STAGE: 6
+STATUS: PASS
+USER-FACING WORKING FLOWS: The full path works on localhost: save a name, invite a contact, accept, create a check, answer with a passkey, and see Confirmed or Could not verify with a UTC timestamp. Refresh keeps the server row. A stranger cannot read the check. Revoke, block, report, export, and delete work. Safety shows the confirmed-check count for that person only and the limits Halo will not cross.
+UI/UX: Screenshots in docs/screenshots cover Verify, Circle, invite, a pending check, Requests, Confirmed, Could not verify, and Safety at 390px and 1440px. Keyboard skip link, field errors, and status text are in the Playwright suite. No primary control pretends an email or payment was sent.
+DATA + SECURITY: Export omits tokens, nonce hashes, public keys, and signatures. Delete anonymizes the person, revokes passkeys, drops the session, and leaves the other person's receipt under the name Deleted person. IDOR checks cover read, cancel, revoke, and a script-tagged purpose stored as text. Rate limits and same-origin checks stay on the write routes. Server failure logs omit purpose text.
+TESTS: npm run lint -> pass. npm run typecheck -> pass. npm test -> 15 files, 27 tests, pass. npm run build -> pass. CI=true npm run test:e2e -> 8 passed. Playwright uses a fresh data/halo-e2e.db so hourly rate limits do not leak between runs.
+REAL INTEGRATIONS: SQLite, sessions, invites, checks, WebAuthn | SANDBOX: local invite signing fallback | DISABLED: email, SMS, push, OAuth, phone lookup, payments, hosted Postgres
+FILES CHANGED: export, delete, confirmed-check count, privacy tests, RUNBOOK, PILOT, README.
+OPEN BUGS/RISKS: Passkeys fail on a numeric host. A link code does not copy a passkey. Authenticator counters that stay at 0 cannot reveal a clone. SQLite is one file, not a hosted database. The pilot in docs/PILOT.md has not been run, so there is no ship decision from observed use.
+NEXT STAGE PROPOSAL: Run the pilot with 10–30 people who already know each other. Do not widen the product until they can finish a check without treating Confirmed as proof that a payment is safe.
+AWAITING APPROVAL: NO — this was the final pre-approved stage.
+```
+
 
 ## Stage 5 report
 
