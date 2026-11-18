@@ -25,8 +25,8 @@ export default async function HomePage() {
           <p className="mt-5 max-w-xl text-lg leading-8 text-muted">
             When a call, text, or message claims to be someone you trust, Halo is how you ask that person to answer.
             {accepted.length > 0
-              ? " A check you start now stays Pending. A passkey answer is not available yet, so Halo will not mark it confirmed."
-              : " What works today is your name, your circle, and a pending check once someone has accepted."}
+              ? " Your contact answers with their passkey. Until they do, the check stays Pending."
+              : " Save your name, add someone to your circle, then ask them to confirm a request."}
           </p>
           {user ? (
             <p className="mt-5 text-base font-semibold text-midnight">Welcome back. This browser is saved as {user.displayName}.</p>

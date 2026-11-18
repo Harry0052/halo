@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { PasskeyManager } from "@/components/product/passkey-manager";
 import { Badge } from "@/components/ui/badge";
 import { buttonClass } from "@/components/ui/button";
 import { readSessionUser } from "@/lib/auth/session";
 import { listChallenges } from "@/lib/challenges/service";
+import { listCredentials } from "@/lib/credentials/service";
 import { getDb } from "@/lib/db/client";
 import { formatUtc } from "@/lib/time";
 
@@ -13,15 +15,21 @@ export default async function RequestsPage() {
   const user = await readSessionUser(db);
   const incoming = user ? listChallenges(db, user.id, "contact") : [];
   const outgoing = user ? listChallenges(db, user.id, "requester") : [];
+  const credentials = user ? listCredentials(db, user.id) : [];
 
   return (
     <main id="main" className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
       <p className="text-sm font-semibold uppercase tracking-[0.16em] text-teal-deep">Requests</p>
       <h1 className="mt-3 font-display text-5xl tracking-tight">Checks waiting on you</h1>
       <p className="mt-4 text-lg leading-8 text-muted">
-        A passkey answer is not available yet. You can read the request and the matching code. Nothing on this page
-        confirms it.
+        Open a request, compare the code, and answer with the passkey on this device. Halo does not confirm anything
+        without that passkey.
       </p>
+      {user ? (
+        <div className="mt-6">
+          <PasskeyManager credentials={credentials} />
+        </div>
+      ) : null}
       {!user ? (
         <Link href="/" className={`${buttonClass("primary")} mt-6`}>
           Save your name first

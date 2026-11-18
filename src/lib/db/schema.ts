@@ -103,3 +103,56 @@ export const challenges = sqliteTable(
     index("challenges_contact_idx").on(table.contactId, table.status, table.createdAt),
   ],
 );
+
+export const deviceCredentials = sqliteTable(
+  "device_credentials",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id),
+    publicKey: text("public_key").notNull(),
+    counter: integer("counter").notNull(),
+    transports: text("transports"),
+    deviceType: text("device_type"),
+    backedUp: integer("backed_up").notNull(),
+    label: text("label").notNull(),
+    demo: integer("demo").notNull(),
+    createdAt: text("created_at").notNull(),
+    revokedAt: text("revoked_at"),
+  },
+  (table) => [index("device_credentials_user_idx").on(table.userId, table.createdAt)],
+);
+
+export const webauthnChallenges = sqliteTable(
+  "webauthn_challenges",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id),
+    purpose: text("purpose").notNull(),
+    challenge: text("challenge").notNull().unique(),
+    haloChallengeId: text("halo_challenge_id"),
+    decision: text("decision"),
+    nonceHash: text("nonce_hash"),
+    expiresAt: text("expires_at").notNull(),
+    usedAt: text("used_at"),
+    createdAt: text("created_at").notNull(),
+  },
+  (table) => [index("webauthn_challenges_user_idx").on(table.userId, table.purpose, table.createdAt)],
+);
+
+export const challengeResponses = sqliteTable("challenge_responses", {
+  id: text("id").primaryKey(),
+  challengeId: text("challenge_id")
+    .notNull()
+    .unique()
+    .references(() => challenges.id),
+  credentialId: text("credential_id")
+    .notNull()
+    .references(() => deviceCredentials.id),
+  signature: text("signature").notNull(),
+  decision: text("decision").notNull(),
+  createdAt: text("created_at").notNull(),
+});

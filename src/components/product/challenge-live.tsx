@@ -6,6 +6,7 @@ import { StatusMark } from "@/components/product/status-mark";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
 import type { ChallengeView } from "@/lib/challenges/service";
+import { formatUtc } from "@/lib/time";
 
 export function ChallengeLive({
   initial,
@@ -64,6 +65,11 @@ export function ChallengeLive({
   return (
     <div>
       <StatusMark challenge={challenge} refreshError={refreshError} />
+      <p className="mt-4 text-sm leading-6 text-muted">
+        {challenge.resolvedAt
+          ? `Recorded ${formatUtc(challenge.resolvedAt)}.`
+          : `Expires ${formatUtc(challenge.expiresAt)}. This stays pending until a passkey answer is recorded.`}
+      </p>
       {canCancel && challenge.status === "pending" ? (
         confirmCancel ? (
           <div className="mt-4 flex flex-wrap gap-2">

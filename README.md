@@ -14,7 +14,7 @@ npm run db:setup
 npm run dev
 ```
 
-Open [http://127.0.0.1:3000](http://127.0.0.1:3000).
+Open [http://localhost:3000](http://localhost:3000). Passkeys need `localhost` (or another real hostname). A numeric address such as `127.0.0.1` cannot be a passkey relying party.
 
 `npm run db:setup` creates `data/halo.db` and applies the SQL in `drizzle/migrations`. The database path is `HALO_DB_PATH` (see `.env.example`).
 
@@ -56,7 +56,7 @@ This section matches the stage that is currently on `main`. Later stages extend 
 | Sample circle | Real seed rows, labeled Sample. They cannot receive a check. |
 | Local invite signing fallback | Sandbox. Circle says when `HALO_INVITE_SECRET` is unset. |
 | Create a check, code, QR, expiry, cancel | Real. A pending check is never shown as Confirmed. |
-| Passkey answers | Not built yet. A check stays Pending until it expires or is cancelled. |
+| Passkey registration and signed confirm or deny | Real WebAuthn. Use localhost. A denial is Could not verify. |
 | Email, SMS, push, OAuth, phone lookup, payments | Disabled. Nothing is simulated. |
 | Hosted Postgres | Not in this repo. |
 

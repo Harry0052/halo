@@ -2,7 +2,25 @@
 
 Product name: **Halo**. The build brief used the working codename PROOF. That codename is not used in the app, the package, or the interface.
 
-Current stage: **3 — expiring checks are on `main`.** Stages 4–6 are still to be built in this run. The app is not claimed to be compliant or ready for a public launch.
+Current stage: **4 — passkey answers are on `main`.** Stages 5–6 are still to be built in this run. The app is not claimed to be compliant or ready for a public launch.
+
+## Stage 4 report
+
+```text
+PRODUCT: Halo
+STAGE: 4
+STATUS: PASS
+USER-FACING WORKING FLOWS: A contact adds a passkey on localhost, then confirms or denies a pending check with that passkey. The requester sees Confirmed with the UTC time, or Could not verify when the contact denies. The limitation sentence stays on the confirmed result. A pending check still does not say Confirmed. Another person's passkey, a revoked passkey, the requester, and a second answer are rejected. A body that includes another user id is rejected. An assertion that does not verify does not change the check.
+UI/UX: Confirmed receipt at 1440px and a denial at 390px (docs/screenshots/04-confirmed-1440.png, 04-denied-390.png). No checkmark icon. Passkey errors say nothing was confirmed. Numeric addresses cannot be a passkey relying party; the screen says to use localhost.
+DATA + SECURITY: device_credentials store the public key and signature counter. webauthn_challenges are single-use and bound to the check, the decision, and the nonce hash. challenge_responses store the signature. The session user is the only actor. Sample checks cannot be answered.
+TESTS: npm run lint -> pass. npm run typecheck -> pass. npm test -> 13 files, 24 tests, pass. npm run build -> pass. CI=true npm run test:e2e -> 6 passed, including Chromium's virtual authenticator.
+REAL INTEGRATIONS: SQLite, sessions, invites, checks, WebAuthn | SANDBOX: local invite signing fallback | DISABLED: email, SMS, push, OAuth, phone lookup, payments
+FILES CHANGED: credential migration, WebAuthn register and respond routes, answer buttons, tests, screenshots.
+OPEN BUGS/RISKS: Passkeys do not work at a raw IP address. Losing the only passkey means that device cannot answer until another passkey is added; revocation UI is Stage 5. Counters of 0 cannot detect a cloned authenticator.
+NEXT STAGE PROPOSAL: Stage 5 — revoke a passkey, block and report, show the rate limit, notification preference, and a plain explanation of what Halo cannot do.
+AWAITING APPROVAL: NO — the owner pre-approved every stage for this run.
+```
+
 
 ## Stage 3 report
 

@@ -47,8 +47,8 @@ export function ChallengeForm({ contacts }: { contacts: ContactOption[] }) {
     <form onSubmit={onSubmit} className="rounded-[1.4rem] bg-white p-5 shadow-sm ring-1 ring-line sm:p-6" noValidate>
       <h2 className="font-display text-3xl tracking-tight">Ask them to confirm</h2>
       <p className="mt-2 text-base leading-7 text-muted">
-        A passkey answer is not available yet. This check stays Pending until it expires or you cancel it. Halo will
-        not mark it confirmed on its own.
+        Your contact answers with their own passkey. Until they do, this stays Pending. Halo will not mark it confirmed
+        on its own.
       </p>
       <label className="mt-5 block text-sm font-semibold" htmlFor="contact-id">
         Who should answer?

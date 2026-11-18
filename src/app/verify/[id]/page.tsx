@@ -35,8 +35,9 @@ export default async function VerifyChallengePage({ params }: { params: Promise<
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-muted">Matching code</p>
           <p className="mt-2 font-mono text-4xl tracking-[0.18em] text-midnight">{challenge.code}</p>
           <p className="mt-3 text-base leading-7 text-muted">
-            Show this code to {challenge.contactName}. It is not a passkey and it does not confirm the request. Expires{" "}
-            {formatUtc(challenge.expiresAt)}.
+            {challenge.status === "pending"
+              ? `Show this code to ${challenge.contactName}. The code is not a passkey and it does not confirm the request. Expires ${formatUtc(challenge.expiresAt)}.`
+              : "This code only identifies the check. The result above is the passkey record."}
           </p>
         </div>
       </section>
