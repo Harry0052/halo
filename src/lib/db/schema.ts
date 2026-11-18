@@ -78,3 +78,28 @@ export const trustEdges = sqliteTable(
     index("trust_edges_contact_idx").on(table.contactId, table.status),
   ],
 );
+
+export const challenges = sqliteTable(
+  "challenges",
+  {
+    id: text("id").primaryKey(),
+    requesterId: text("requester_id")
+      .notNull()
+      .references(() => users.id),
+    contactId: text("contact_id")
+      .notNull()
+      .references(() => users.id),
+    purpose: text("purpose").notNull(),
+    nonceHash: text("nonce_hash").notNull(),
+    code: text("code").notNull(),
+    expiresAt: text("expires_at").notNull(),
+    status: text("status").notNull(),
+    idempotencyKey: text("idempotency_key"),
+    createdAt: text("created_at").notNull(),
+    resolvedAt: text("resolved_at"),
+  },
+  (table) => [
+    index("challenges_requester_idx").on(table.requesterId, table.createdAt),
+    index("challenges_contact_idx").on(table.contactId, table.status, table.createdAt),
+  ],
+);

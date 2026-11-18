@@ -7,8 +7,8 @@ export function StatusLegend() {
         These are the only results Halo shows.
       </h2>
       <p className="mt-2 max-w-2xl text-base leading-7 text-muted">
-        This legend is not a verification of a request. A real result will appear only after an accepted contact
-        answers a check. That answer is not available yet.
+        This legend is not a verification of a request. A pending check is not a confirmation. Passkey answers are not
+        available yet.
       </p>
       <ul className="mt-5 grid gap-3 md:grid-cols-3">
         {STATUS_WORDS.map((item) => (

@@ -2,7 +2,25 @@
 
 Product name: **Halo**. The build brief used the working codename PROOF. That codename is not used in the app, the package, or the interface.
 
-Current stage: **2 — trusted circle is on `main`.** Stages 3–6 are still to be built in this run. The app is not claimed to be compliant or ready for a public launch.
+Current stage: **3 — expiring checks are on `main`.** Stages 4–6 are still to be built in this run. The app is not claimed to be compliant or ready for a public launch.
+
+## Stage 3 report
+
+```text
+PRODUCT: Halo
+STAGE: 3
+STATUS: PASS
+USER-FACING WORKING FLOWS: An accepted contact can be asked to confirm a short request. Halo stores a hash of a random nonce, shows a matching code and QR, and keeps the check Pending. Refresh shows the same row. The contact can open Requests and read the purpose and code. There is no confirm button. Cancel and expiry both become Could not verify. A stranger gets the same not-found response as a missing check. Card numbers are rejected. A repeated submit with the same idempotency key returns the same check. The sample check is labeled Sample and cannot be confirmed.
+UI/UX: Pending check at 390px and the contact's request at 1440px (docs/screenshots/03-pending-390.png, 03-requests-1440.png). Polling failure says the saved result is unchanged. Requests is in the nav. Sample is a separate page.
+DATA + SECURITY: challenges table. Nonce column does not exist. Only requester or contact can read. Unaccepted and sample contacts cannot receive a check. Ten creates per hour per user and per IP. Audit events omit the purpose text. confirmationGate refuses expired, cancelled, and sample checks and does not write Confirmed.
+TESTS: npm run lint -> pass. npm run typecheck -> pass. npm test -> 12 files, 22 tests, pass. npm run build -> pass. CI=true npm run test:e2e -> 5 passed.
+REAL INTEGRATIONS: SQLite, sessions, invites, checks | SANDBOX: local invite signing fallback | DISABLED: email, SMS, push, OAuth, phone lookup, payments, passkey answers
+FILES CHANGED: challenge migration, service, Verify form, check page, Requests, sample page, tests, screenshots.
+OPEN BUGS/RISKS: A check created now cannot be confirmed until Stage 4, and it will expire. That is stated on the form. The matching code is stored so both people can read it; it is not the authenticator secret.
+NEXT STAGE PROPOSAL: Stage 4 — the contact signs confirm or deny with a passkey, the server verifies it, and a deny stays Could not verify.
+AWAITING APPROVAL: NO — the owner pre-approved every stage for this run.
+```
+
 
 ## Stage 2 report
 

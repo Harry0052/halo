@@ -41,6 +41,7 @@ src/components     shell and design-system pieces
 src/lib/db         schema, migrations, seed
 src/lib/auth       sessions and display names
 src/lib/trust      invite links and the trusted circle
+src/lib/challenges expiring checks, codes, and status words
 ```
 
 ## What is real, sandboxed, or disabled
@@ -54,7 +55,8 @@ This section matches the stage that is currently on `main`. Later stages extend 
 | Invite link, expiry, revoke, mutual accept | Real. Email delivery is disabled, so you copy the link. |
 | Sample circle | Real seed rows, labeled Sample. They cannot receive a check. |
 | Local invite signing fallback | Sandbox. Circle says when `HALO_INVITE_SECRET` is unset. |
-| Challenges and passkeys | Not built yet. |
+| Create a check, code, QR, expiry, cancel | Real. A pending check is never shown as Confirmed. |
+| Passkey answers | Not built yet. A check stays Pending until it expires or is cancelled. |
 | Email, SMS, push, OAuth, phone lookup, payments | Disabled. Nothing is simulated. |
 | Hosted Postgres | Not in this repo. |
 
