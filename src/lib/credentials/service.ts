@@ -268,3 +268,14 @@ export async function verifyResponseAssertion(
 export function markCeremonyUsed(db: HaloDb, ceremonyId: string, now = new Date()) {
   db.update(webauthnChallenges).set({ usedAt: nowIso(now) }).where(eq(webauthnChallenges.id, ceremonyId)).run();
 }
+
+export function revokeCredential(db: HaloDb, userId: string, credentialId: string, now = new Date()) {
+  const row = db.select().from(deviceCredentials).where(eq(deviceCredentials.id, credentialId)).get();
+  if (!row || row.userId !== userId || row.demo === 1) {
+    return { ok: false as const, message: "That passkey is not on this server." };
+  }
+  if (row.revokedAt) return { ok: true as const };
+  db.update(deviceCredentials).set({ revokedAt: nowIso(now) }).where(eq(deviceCredentials.id, credentialId)).run();
+  recordEvent(db, userId, "credential_revoked", { credentialId: credentialId.slice(0, 12) });
+  return { ok: true as const };
+}

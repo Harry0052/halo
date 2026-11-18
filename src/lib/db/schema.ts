@@ -6,6 +6,7 @@ export const users = sqliteTable("users", {
   kind: text("kind").notNull(),
   textScale: text("text_scale").notNull(),
   contrast: text("contrast").notNull(),
+  notifyInApp: integer("notify_in_app").notNull().default(1),
   createdAt: text("created_at").notNull(),
 });
 
@@ -142,6 +143,32 @@ export const webauthnChallenges = sqliteTable(
   },
   (table) => [index("webauthn_challenges_user_idx").on(table.userId, table.purpose, table.createdAt)],
 );
+
+export const abuseReports = sqliteTable(
+  "abuse_reports",
+  {
+    id: text("id").primaryKey(),
+    reporterId: text("reporter_id")
+      .notNull()
+      .references(() => users.id),
+    subjectUserId: text("subject_user_id").references(() => users.id),
+    challengeId: text("challenge_id"),
+    reason: text("reason").notNull(),
+    createdAt: text("created_at").notNull(),
+  },
+  (table) => [index("abuse_reports_reporter_idx").on(table.reporterId, table.createdAt)],
+);
+
+export const deviceLinks = sqliteTable("device_links", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  codeHash: text("code_hash").notNull().unique(),
+  expiresAt: text("expires_at").notNull(),
+  usedAt: text("used_at"),
+  createdAt: text("created_at").notNull(),
+});
 
 export const challengeResponses = sqliteTable("challenge_responses", {
   id: text("id").primaryKey(),

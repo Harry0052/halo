@@ -13,7 +13,25 @@ export function PasskeyManager({ credentials }: { credentials: Credential[] }) {
   const toast = useToast();
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
   const active = credentials.filter((item) => !item.revokedAt);
+
+  async function revoke(id: string) {
+    setError(null);
+    try {
+      const response = await fetch(`/api/devices/${id}/revoke`, { method: "POST" });
+      const body = (await response.json().catch(() => null)) as { error?: { message?: string } } | null;
+      if (!response.ok) {
+        setError(body?.error?.message ?? "Halo could not revoke that passkey.");
+        return;
+      }
+      toast("Passkey revoked. It cannot answer a check.");
+      setConfirmId(null);
+      router.refresh();
+    } catch {
+      setError("Halo could not reach this server. The passkey was not revoked.");
+    }
+  }
 
   async function addPasskey() {
     if (typeof window.PublicKeyCredential === "undefined") {
@@ -74,9 +92,25 @@ export function PasskeyManager({ credentials }: { credentials: Credential[] }) {
       ) : (
         <ul className="mt-3 space-y-2">
           {active.map((item) => (
-            <li key={item.id} className="text-sm leading-6">
-              <span className="font-semibold">{item.label}</span>
-              <span className="text-muted"> · saved {formatUtc(item.createdAt)}</span>
+            <li key={item.id} className="flex flex-wrap items-center justify-between gap-2 text-sm leading-6">
+              <span>
+                <span className="font-semibold">{item.label}</span>
+                <span className="text-muted"> · saved {formatUtc(item.createdAt)}</span>
+              </span>
+              {confirmId === item.id ? (
+                <span className="flex gap-2">
+                  <Button type="button" variant="danger" onClick={() => revoke(item.id)}>
+                    Revoke passkey
+                  </Button>
+                  <Button type="button" variant="secondary" onClick={() => setConfirmId(null)}>
+                    Keep it
+                  </Button>
+                </span>
+              ) : (
+                <Button type="button" variant="secondary" onClick={() => setConfirmId(item.id)}>
+                  Revoke
+                </Button>
+              )}
             </li>
           ))}
         </ul>

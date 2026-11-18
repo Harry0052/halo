@@ -57,6 +57,8 @@ This section matches the stage that is currently on `main`. Later stages extend 
 | Local invite signing fallback | Sandbox. Circle says when `HALO_INVITE_SECRET` is unset. |
 | Create a check, code, QR, expiry, cancel | Real. A pending check is never shown as Confirmed. |
 | Passkey registration and signed confirm or deny | Real WebAuthn. Use localhost. A denial is Could not verify. |
+| Revoke a passkey, block a contact, save a report | Real. A report is stored here. Nobody is emailed. |
+| In-app prompt switch and browser link code | Real. Push, email, and SMS stay disabled. The link code is stored only as a hash. |
 | Email, SMS, push, OAuth, phone lookup, payments | Disabled. Nothing is simulated. |
 | Hosted Postgres | Not in this repo. |
 

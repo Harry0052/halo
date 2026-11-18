@@ -6,7 +6,7 @@ import { readChallenge } from "@/lib/challenges/service";
 import { verifyResponseAssertion } from "@/lib/credentials/service";
 import type { RelyingParty } from "@/lib/credentials/rp";
 import type { HaloDb } from "@/lib/db/client";
-import { challengeResponses, challenges, deviceCredentials, webauthnChallenges } from "@/lib/db/schema";
+import { challengeResponses, challenges, deviceCredentials, trustEdges, webauthnChallenges } from "@/lib/db/schema";
 import { isPast, nowIso } from "@/lib/time";
 
 const NOT_FOUND = "That check is not on this server.";
@@ -44,6 +44,18 @@ export function commitResponse(
       if (!credential || credential.userId !== actorId || credential.revokedAt || credential.demo === 1) {
         return { ok: false as const, message: "That passkey is not enrolled for you." };
       }
+      const edge = tx
+        .select()
+        .from(trustEdges)
+        .where(
+          and(
+            eq(trustEdges.requesterId, row.requesterId),
+            eq(trustEdges.contactId, row.contactId),
+            eq(trustEdges.status, "accepted"),
+          ),
+        )
+        .get();
+      if (!edge) return { ok: false as const, message: "That person is not an accepted contact." };
       if (credential.counter > 0 && input.newCounter > 0 && input.newCounter <= credential.counter) {
         return { ok: false as const, message: "That passkey answer was already used." };
       }

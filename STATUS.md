@@ -2,7 +2,25 @@
 
 Product name: **Halo**. The build brief used the working codename PROOF. That codename is not used in the app, the package, or the interface.
 
-Current stage: **4 — passkey answers are on `main`.** Stages 5–6 are still to be built in this run. The app is not claimed to be compliant or ready for a public launch.
+Current stage: **5 — recovery and abuse controls are on `main`.** Stage 6 is still to be built in this run. The app is not claimed to be compliant or ready for a public launch.
+
+## Stage 5 report
+
+```text
+PRODUCT: Halo
+STAGE: 5
+STATUS: PASS
+USER-FACING WORKING FLOWS: A person can revoke their own passkey. A revoked passkey cannot confirm a check, and another person cannot revoke it. Blocking a contact removes the accepted edge both ways, so new checks are refused and an existing pending check cannot be answered. Safety explains the scam and the limits in plain language. A report is saved on this server and says nobody is emailed. The in-app prompt switch persists. A browser link code is shown once and only its hash is stored. A bad or reused code gets the same invalid message. Creating more checks than the hourly limit is refused.
+UI/UX: Safety at 390px and 1440px (docs/screenshots/05-safety-390.png, 05-safety-1440.png). Block and revoke ask for a second confirmation. Four-item bottom nav. Push and email are described as disabled, not as quiet success.
+DATA + SECURITY: abuse_reports, device_links (code hash only), users.notify_in_app. Revoke and block write security events without the report text. Rate limits: 10 checks, 20 invites, 30 answers, 10 reports per hour, plus the same windows per IP where the route has an IP key.
+TESTS: npm run lint -> pass. npm run typecheck -> pass. npm test -> 14 files, 26 tests, pass. npm run build -> pass. CI=true npm run test:e2e -> 7 passed.
+REAL INTEGRATIONS: SQLite, sessions, invites, checks, WebAuthn, reports, link codes | SANDBOX: local invite signing fallback | DISABLED: email, SMS, push, OAuth, phone lookup, payments
+FILES CHANGED: safety migration, revoke, block, report, notifications, device link, Safety screen, tests, screenshots.
+OPEN BUGS/RISKS: A link code moves the browser onto an existing name. It does not copy the passkey. In-app prompts off does not hide the Requests list. Counters of 0 still cannot detect a cloned authenticator.
+NEXT STAGE PROPOSAL: Stage 6 — permission audit, export and delete, the north-star count, runbook, and an unrun pilot plan. No compliance claim.
+AWAITING APPROVAL: NO — the owner pre-approved every stage for this run.
+```
+
 
 ## Stage 4 report
 

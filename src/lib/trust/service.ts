@@ -217,6 +217,35 @@ export function revokeInvite(db: HaloDb, ownerId: string, invitationId: string, 
  * A person can be asked to confirm a request only after they have accepted.
  * Demo rows are never a real contact. Pending invites do not count.
  */
+export function blockContact(db: HaloDb, actorId: string, contactId: string, now = new Date()) {
+  if (actorId === contactId) return { ok: false as const, message: "You cannot block yourself." };
+  const contact = db.select().from(users).where(eq(users.id, contactId)).get();
+  const related = db
+    .select()
+    .from(trustEdges)
+    .where(
+      and(
+        eq(trustEdges.requesterId, actorId),
+        eq(trustEdges.contactId, contactId),
+      ),
+    )
+    .get();
+  if (!contact || contact.kind === "demo" || !related) {
+    return { ok: false as const, message: "That person is not an accepted contact." };
+  }
+  const updatedAt = nowIso(now);
+  const setBlocked = (requesterId: string, otherId: string) => {
+    db.update(trustEdges)
+      .set({ status: "blocked", updatedAt })
+      .where(and(eq(trustEdges.requesterId, requesterId), eq(trustEdges.contactId, otherId)))
+      .run();
+  };
+  setBlocked(actorId, contactId);
+  setBlocked(contactId, actorId);
+  recordEvent(db, actorId, "contact_blocked", { contactId });
+  return { ok: true as const };
+}
+
 export function canReceiveChallenge(db: HaloDb, requesterId: string, contactId: string) {
   if (!requesterId || !contactId || requesterId === contactId) return false;
   const requester = db.select().from(users).where(eq(users.id, requesterId)).get();

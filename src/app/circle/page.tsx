@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BlockButton } from "@/components/product/block-button";
 import { InvitePanel } from "@/components/product/invite-panel";
 import { Badge } from "@/components/ui/badge";
 import { buttonClass } from "@/components/ui/button";
@@ -15,7 +16,8 @@ export default async function CirclePage() {
   const circle = user ? listCircle(db, user.id) : { invites: [], contacts: [] };
   const samples = samplePeople(db);
   const localSigning = inviteSigning().source === "local-fallback";
-  const accepted = circle.contacts.filter((contact) => contact.status === "accepted");
+  const accepted = circle.contacts.filter((contact) => contact.status === "accepted" && !contact.sample);
+  const blocked = circle.contacts.filter((contact) => contact.status === "blocked");
 
   return (
     <main id="main" className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
@@ -54,14 +56,34 @@ export default async function CirclePage() {
           ) : (
             <ul className="mt-3 space-y-3">
               {accepted.map((contact) => (
-                <li key={contact.id} className="flex items-center justify-between gap-3 rounded-[1.4rem] bg-white px-5 py-4 ring-1 ring-line">
+                <li key={contact.id} className="flex flex-wrap items-center justify-between gap-3 rounded-[1.4rem] bg-white px-5 py-4 ring-1 ring-line">
                   <p className="text-lg font-semibold">{contact.displayName}</p>
-                  <Badge tone="accepted">Accepted</Badge>
+                  <span className="flex items-center gap-2">
+                    <Badge tone="accepted">Accepted</Badge>
+                    <BlockButton contactId={contact.id} name={contact.displayName} />
+                  </span>
                 </li>
               ))}
             </ul>
           )}
         </section>
+        {blocked.length > 0 ? (
+          <section aria-labelledby="blocked-heading">
+            <h2 id="blocked-heading" className="font-display text-3xl tracking-tight">
+              Blocked
+            </h2>
+            <ul className="mt-3 space-y-3">
+              {blocked.map((contact) => (
+                <li key={contact.id} className="rounded-[1.4rem] bg-white px-5 py-4 ring-1 ring-line">
+                  <p className="text-lg font-semibold">{contact.displayName}</p>
+                  <p className="mt-1 text-sm leading-6 text-muted">
+                    Blocked. They cannot confirm requests for you, and you cannot confirm for them.
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
         <section aria-labelledby="sample-heading">
           <div className="flex items-center gap-3">
             <h2 id="sample-heading" className="font-display text-3xl tracking-tight">
